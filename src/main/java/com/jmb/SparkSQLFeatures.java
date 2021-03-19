@@ -1,5 +1,6 @@
 package com.jmb;
 
+import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
@@ -30,10 +31,14 @@ public class SparkSQLFeatures {
     }
 
     private void init() throws Exception {
+        SparkConf appConfig = new SparkConf().set("spark.testing.memory", "900000000");
+
         //Create the Spark Session
         SparkSession session = SparkSession.builder()
                 .appName("SparkSQLFeatures")
-                .master("local").getOrCreate();
+                .config(appConfig)
+                .master("local")
+                .getOrCreate();
 
         //Ingest data from CSV files into a DataFrame
         Dataset<Row> df = session.read()
